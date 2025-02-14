@@ -13,7 +13,6 @@ pipeline {
         stage("GIT checkout") {
             steps {
                 script {
-                    // Checkout the specified branch
                     def branchName = params.BRANCH_NAME
                     checkout([$class: 'GitSCM', branches: [[name: branchName]], userRemoteConfigs: [[url: 'https://github.com/imkiran13/boxfuse-java-maven-app.git']]])
                 }
@@ -38,7 +37,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'dev' }
             }
             steps {
-                deployToTomcat('65.2.161.227', 'admin', 'admin', 'http://65.2.161.227:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'Dev', params.WAR_VERSION)
+                deployToTomcat('65.2.161.227', 'admin', 'admin', 'http://65.2.161.227:8080/manager/text', "/boxfuse-java-maven-app", 'Dev', params.WAR_VERSION)
             }
         }
         stage("Deploy to QA") {
@@ -46,7 +45,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'qa' }
             }
             steps {
-                deployToTomcat('15.207.16.116', 'admin', 'admin', 'http://15.207.16.116:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'QA', params.WAR_VERSION)
+                deployToTomcat('15.207.16.116', 'admin', 'admin', 'http://15.207.16.116:8080/manager/text', "/boxfuse-java-maven-app", 'QA', params.WAR_VERSION)
             }
         }
         stage("Deploy to Prod") {
@@ -57,7 +56,7 @@ pipeline {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step
 
                 // Deploy to PROD server after approval
-                deployToTomcat('43.204.103.54', 'admin', 'admin', 'http://43.204.103.54:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'Prod', params.WAR_VERSION)
+                deployToTomcat('43.204.103.54', 'admin', 'admin', 'http://43.204.103.54:8080/manager/text', "/boxfuse-java-maven-app", 'Prod', params.WAR_VERSION)
 
                 // Send Slack notification
                 slackSend(channel: 'cricket', message: "Deployment to PROD has been approved by manager with version ${params.WAR_VERSION}.")
@@ -69,9 +68,14 @@ pipeline {
 def deployToTomcat(tomcatIP, username, password, tomcatURL, contextPath, environment, warVersion) {
     def warFileName = "target/boxfuse-java-maven-app-${warVersion}.war"
 
-    // Deploy the WAR file using curl
+    // Undeploy previous version (optional)
     sh """
-        curl -v -u ${username}:${password} --upload-file ${warFileName} ${tomcatURL}/deploy?path=${contextPath}&update=true
+        curl -v -u ${username}:${password} '${tomcatURL}/undeploy?path=${contextPath}'
+    """
+
+    // Deploy the WAR file using correct curl command
+    sh """
+        curl -v -u ${username}:${password} -X PUT --upload-file ${warFileName} '${tomcatURL}/deploy?path=${contextPath}&update=true'
     """
     echo "Deployment to ${environment} server with version ${warVersion} completed."
 }
