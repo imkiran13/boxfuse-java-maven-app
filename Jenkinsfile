@@ -33,7 +33,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'dev' }
             }
             steps {
-                deployToTomcat('13.233.140.75', 'tomcat', 'tomcat', 'http://13.233.140.75:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'Dev', params.WAR_VERSION)
+                deployToTomcat('65.2.161.227', 'admin', 'admin', 'http://65.2.161.227:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'Dev', params.WAR_VERSION)
             }
         }
         stage("Deploy to QA") {
@@ -41,7 +41,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'qa' }
             }
             steps {
-                deployToTomcat('35.154.248.74', 'tomcat', 'tomcat', 'http://35.154.248.74:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'QA', params.WAR_VERSION)
+                deployToTomcat('15.207.16.116', 'admin', 'admin', 'http://15.207.16.116:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'QA', params.WAR_VERSION)
             }
         }
         stage("Deploy to Prod") {
@@ -52,10 +52,10 @@ pipeline {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step
 
                 // Deploy to PROD server after approval
-                deployToTomcat('43.205.203.47', 'tomcat', 'tomcat', 'http://43.205.203.47:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'Prod', params.WAR_VERSION)
+                deployToTomcat('43.204.103.54', 'admin', 'admin', 'http://43.204.103.54:8080/manager/text', "/boxfuse-java-maven-app-${params.WAR_VERSION}", 'Prod', params.WAR_VERSION)
 
                 // Send Slack notification
-                slackSend(channel: 'devopsrocks9am', message: "Deployment to PROD has been approved by manager with version ${params.WAR_VERSION}.")
+                slackSend(channel: 'cricket', message: "Deployment to PROD has been approved by manager with version ${params.WAR_VERSION}.")
             }
         }
     }
