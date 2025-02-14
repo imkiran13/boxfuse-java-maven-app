@@ -30,7 +30,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'dev' }
             }
             steps {
-                deployToTomcat('65.2.161.227', 'admin', 'admin', 'http://65.2.161.227:8080/manager/text', '/sample-java-maven-app', 'Dev')
+                deployToTomcat('65.2.161.227', 'admin', 'admin', 'http://65.2.161.227:8080/manager/text', '/boxfuse-java-maven-app', 'Dev')
             }
         }
         stage("Deploy to QA") {
