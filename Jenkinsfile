@@ -5,6 +5,11 @@ pipeline {
         string(name: 'WAR_VERSION', defaultValue: '1.0', description: 'Specify the WAR file version')
     }
     stages {
+        stage("Cleanup Workspace") {
+            steps {
+                cleanWs() // Cleans the workspace before starting the pipeline
+            }
+        }
         stage("GIT checkout") {
             steps {
                 script {
