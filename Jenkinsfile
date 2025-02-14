@@ -66,7 +66,8 @@ def deployToTomcat(tomcatIP, username, password, tomcatURL, contextPath, environ
 
     // Deploy the WAR file using curl
     sh """
-        curl -v -u ${username}:${password} --upload-file ${warFileName} ${tomcatURL}/deploy?path=${contextPath}&update=true
+       curl -v -u "${username}:${password}" -T "${warFileName}" "${tomcatURL}/text/deploy?path=${contextPath}&update=true"
+
     """
     echo "Deployment to ${environment} server with version ${warVersion} completed."
 }
