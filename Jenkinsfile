@@ -46,7 +46,7 @@ pipeline {
         }
         stage("Deploy to Prod") {
             when {
-                expression { params.BRANCH_NAME == 'master' }
+                expression { params.BRANCH_NAME == 'main' }
             }
             steps {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step
