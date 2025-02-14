@@ -30,7 +30,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'dev' }
             }
             steps {
-                deployToTomcat('13.233.140.75', 'admin', 'admin', 'http://13.233.140.75:8080/manager/text', '/sample-java-maven-app', 'Dev')
+                deployToTomcat('65.2.161.227', 'admin', 'admin', 'http://65.2.161.227:8080/manager/text', '/sample-java-maven-app', 'Dev')
             }
         }
         stage("Deploy to QA") {
@@ -38,7 +38,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'qa' }
             }
             steps {
-                deployToTomcat('35.154.248.74', 'admin', 'admin', 'http://35.154.248.74:8080/manager/text', '/boxfuse-java-maven-app', 'QA')
+                deployToTomcat('15.207.16.116', 'admin', 'admin', 'http://15.207.16.116:8080/manager/text', '/boxfuse-java-maven-app', 'QA')
             }
         }
         stage("Deploy to Prod") {
@@ -49,7 +49,7 @@ pipeline {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step
 
                 // Deploy to PROD server after approval
-                deployToTomcat('43.205.203.47', 'admin', 'admin', 'http://43.205.203.47:8080/manager/text', '/boxfuse-java-maven-app', 'Prod')
+                deployToTomcat('43.204.103.54', 'admin', 'admin', 'http://43.204.103.54:8080/manager/text', '/boxfuse-java-maven-app', 'Prod')
                 
                 // Send Slack notification
                 slackSend(channel: 'cricket', message: "Deployment to PROD has been approved by manager.")
